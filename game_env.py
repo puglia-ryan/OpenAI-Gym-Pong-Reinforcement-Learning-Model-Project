@@ -1,3 +1,4 @@
+import cv2
 import gym
 import preprocess_frame as ppf
 
@@ -5,9 +6,9 @@ import preprocess_frame as ppf
 class pong_game(object):
 
     def __init__(self):
-        self.environment = gym.make("ALE/Pong-v5", render_mode="human")
+        self.environment = gym.make("ALE/Pong-v5")
         self.environment.seed(0)
-
+        cv2.namedWindow("Pong Game", cv2.WINDOW_NORMAL)
     def reset(self):
         self.frame = self.environment.reset()
 
@@ -17,4 +18,6 @@ class pong_game(object):
         # That's why we add 2 to the action
         frame, reward, done, info = self.environment.step(action + 2)
         processed_frame = ppf.resize_frame(frame)
+        cv2.imshow("Pong Game", processed_frame)
+        cv2.waitKey(10)
         return processed_frame, reward, done
