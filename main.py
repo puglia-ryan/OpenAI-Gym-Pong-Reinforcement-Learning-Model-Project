@@ -1,3 +1,5 @@
+#This file contains the main training loop for the agent to learn.
+#The game environment is also set up here as well as the agent
 import numpy as np
 import cv2
 
