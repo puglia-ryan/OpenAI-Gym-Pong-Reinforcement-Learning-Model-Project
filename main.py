@@ -28,16 +28,16 @@ while step < total_steps:
     processed_frame, reward, done = pg.takeAction(action)
     total_reward += reward
 
-    # Append processed_frame along the first dimension to maintain the temporal sequence
+    #The processed frame is added to the agent's memory state
     new_state = np.append(state[1:], processed_frame[np.newaxis, :, :], axis=0)
-    # Add the experience to the memory
+    #The experiece is added to the memory ofthe agent
     deepQAgent.memory.append(state, action, reward, new_state, done)
 
     state = new_state
     step += 1
 
     if step > deepQAgent.dqAgent.nb_steps_warmup and deepQAgent.memory.nb_entries >= deepQAgent.memory.window_length + 2:
-        # Train the DQN agent using a batch of experiences from memory
+        #The agent is trained using batches from memory
         experiences = deepQAgent.memory.sample(batch_size)
         deepQAgent.dqAgent.train_on_batch(experiences)
 
@@ -51,6 +51,7 @@ while step < total_steps:
         print(f"Step: {step}, Total Reward: {total_reward}")
         pg.reset()
         total_reward = 0
+    
     print(reward)
     time.sleep(frame_delay / 1000)
 
