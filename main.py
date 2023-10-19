@@ -55,4 +55,5 @@ while step < total_steps:
     print(reward)
     time.sleep(frame_delay / 1000)
 
-
+#Currently get the following valueerror after running the program for a while:
+#ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
