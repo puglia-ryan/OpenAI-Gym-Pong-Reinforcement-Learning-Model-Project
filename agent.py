@@ -1,3 +1,4 @@
+#This file is responsible for creating the agent which interracts with the game environment
 import numpy as np
 from rl.agents import DQNAgent
 from rl.policy import BoltzmannQPolicy
