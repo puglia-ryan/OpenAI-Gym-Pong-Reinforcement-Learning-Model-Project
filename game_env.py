@@ -1,3 +1,5 @@
+#This file is responsible for setting up the game environment.
+#The agent/player can also take an action using this method
 import cv2
 import gym
 import preprocess_frame as ppf

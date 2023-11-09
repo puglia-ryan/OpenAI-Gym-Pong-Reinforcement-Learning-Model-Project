@@ -1,3 +1,4 @@
+#This file is the blueprint for the neural network which the agent will use
 from tensorflow import keras
 
 class CustomModel:
