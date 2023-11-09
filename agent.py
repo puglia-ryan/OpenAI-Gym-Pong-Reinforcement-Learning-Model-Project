@@ -27,7 +27,7 @@ class Agent:
         return agent
 
     def model_summary(self):
-        print(self.model.model.summary())
+        print(self.neural_model.model.summary())
 
     def select_move(self, frame):
         q_values = self.neural_model.model.predict(frame)

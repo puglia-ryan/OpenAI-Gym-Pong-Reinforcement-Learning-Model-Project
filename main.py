@@ -29,15 +29,18 @@ while step < total_steps:
     # Append processed_frame along the first dimension to maintain the temporal sequence
     new_state = np.append(state[1:], processed_frame[np.newaxis, :, :], axis=0)
     # Add the experience to the memory
-    deepQAgent.memory.append(state, action, reward, new_state, done)
-
+    deepQAgent.memory.append(observation=state, action=action, reward=reward, terminal=done)
+    print("Num of memory entries: ", deepQAgent.memory.nb_entries)
     state = new_state
     step += 1
 
     if step > deepQAgent.dqAgent.nb_steps_warmup and deepQAgent.memory.nb_entries >= deepQAgent.memory.window_length + 2:
+        print(deepQAgent.model_summary())
         # Train the DQN agent using a batch of experiences from memory
         experiences = deepQAgent.memory.sample(batch_size)
-        deepQAgent.dqAgent.train_on_batch(experiences)
+        observations = np.array([exp[0]['observation'] for exp in experiences])
+        q_values = np.array([exp[0]['q_values'] for exp in experiences])
+        deepQAgent.dqAgent.fit(x=observations, y=q_values)
 
     if step % update_frequency == 0:
         deepQAgent.dqAgent.update_target_model_hard()
