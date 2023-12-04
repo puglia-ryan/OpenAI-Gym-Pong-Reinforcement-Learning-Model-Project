@@ -9,7 +9,7 @@ from model import CustomModel
 from memory import Memory
 
 class Agent:
-    def __init__(self, input_shape, actions, memory_len=3):
+    def __init__(self, input_shape, actions, memory_len=5):
         self.input_shape = input_shape
         self.actions = actions
         self.memory = memory.Memory(memory_len)

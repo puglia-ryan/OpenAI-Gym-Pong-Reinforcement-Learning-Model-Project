@@ -29,7 +29,7 @@ def get_coords(frame):
                     paddle2.append(row_index)
                 else:
                     ball = [row_index, col_index]
-
+    
     return sum(paddle1)/len(paddle1), sum(paddle2)/len(paddle2), ball
 
 
