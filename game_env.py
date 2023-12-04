@@ -19,7 +19,4 @@ class pong_game(object):
         # We only need RIGHT and LEFT (so 2 and 3) for our model. The agent always returns 0 or 1 as a result, as there are only two output layers
         # That's why we add 2 to the action
         frame, reward, done, info = self.environment.step(action + 2)
-        processed_frame = ppf.resize_frame(frame)
-        cv2.imshow("Pong Game", processed_frame)
-        cv2.waitKey(10)
-        return processed_frame, reward, done
+        return frame, reward, done, info
