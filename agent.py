@@ -17,7 +17,7 @@ class Agent:
         self.total_memory = []
 
     def create_dqn_agent(self):
-        epsilon_policy = custom_eps_greedy
+        epsilon_policy = custom_eps_greedy.CustomEpsGreedyPolicy(epsilon=0.1)
         agent = DQNAgent(
             model=self.neural_model.model,
             memory=self.memory,
@@ -42,9 +42,15 @@ class Agent:
         return last_coords
 
     def select_move(self):
-        input_coords = np.array(list(self.memory.frames))
-        print(input_coords)
-        print(input_coords.shape)
-        q_values = self.neural_model.model.predict(input_coords)
-        self.total_memory.append(input_coords)
-        return np.argmax(q_values[-1])
+        def select_move(self):
+            # Get the input coordinates from the agent's memory
+            input_coords = np.array(list(self.memory.frames))
+
+            # Use epsilon-greedy policy to decide whether to explore or exploit
+            if np.random.rand() < self.dqAgent.policy.epsilon:
+                # Explore: Randomly choose an action
+                return np.random.randint(self.actions)
+            else:
+                # Exploit: Choose the action with the highest Q-value
+                q_values = self.neural_model.model.predict(input_coords)
+                return np.argmax(q_values[-1])

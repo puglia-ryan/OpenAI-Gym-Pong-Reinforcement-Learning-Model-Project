@@ -9,9 +9,8 @@ import preprocess_frame as ppf
 import cv2
 
 total_steps = 100000
-update_frequency = 4
 target_update_frequency = 1500
-
+step = 0
 
 pg = game_env.pong_game()
 pg.reset()
@@ -33,12 +32,18 @@ for i in range(total_steps):
         prev_ball = ball
     else:
         if prev_ball[1] < 20:
-            ball = [prev_ball[0], prev_ball[1]-1]
+            ball = [prev_ball[0], prev_ball[1] - 1]
             prev_ball = ball
         else:
-            ball = [prev_ball[0], prev_ball[1]+1]
+            ball = [prev_ball[0], prev_ball[1] + 1]
             prev_ball = ball
+
     all_inputs = [p1, p2, ball[0], ball[1]]
     game_agent.memory.add_entry(all_inputs, reward, action, done)
+    if step % target_update_frequency == 0:
+        game_agent.dqAgent.save_weights("your_weights.h5", overwrite=True)
+        game_agent.dqAgent.update_target_model_hard()
+
     if done:
         pg.reset()
+    step += 1
