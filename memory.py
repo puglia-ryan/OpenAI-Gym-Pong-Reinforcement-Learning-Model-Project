@@ -14,3 +14,10 @@ class Memory():
         self.rewards.append(new_reward)
         self.actions.append(new_action)
         self.done.append(new_done)
+
+    def print_memory(self):
+        print("Last 5 frames: ", self.frames)
+        print("Last 5 actions: ", self.actions)
+        print("Last 5 rewards: ", self.rewards)
+        print("Last 5 done states: ", self.done)
+

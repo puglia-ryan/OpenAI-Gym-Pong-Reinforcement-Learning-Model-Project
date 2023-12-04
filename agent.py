@@ -1,12 +1,11 @@
 #This file is responsible for creating the agent which interracts with the game environment
 import numpy as np
 from rl.agents import DQNAgent
-from rl.policy import BoltzmannQPolicy
+from rl.policy import EpsGreedyQPolicy
 from keras.optimizers import Adam
-
 import memory
 from model import CustomModel
-from memory import Memory
+
 
 class Agent:
     def __init__(self, input_shape, actions, memory_len=5):
@@ -18,10 +17,11 @@ class Agent:
         self.total_memory = []
 
     def create_dqn_agent(self):
+        epsilon_policy = EpsGreedyQPolicy(epsilon=0.1)
         agent = DQNAgent(
             model=self.neural_model.model,
             memory=self.memory,
-            policy=BoltzmannQPolicy(),
+            policy=epsilon_policy,
             nb_actions=self.actions,
             nb_steps_warmup=100,
             target_model_update=1000
@@ -32,11 +32,15 @@ class Agent:
     def model_summary(self):
         print(self.neural_model.model.summary())
 
+    def preprocess_coord_input(self):
+        last_coords = list(self.memory.frames)
+        if len(last_coords) < 5:
+            return np.zeros(self.input_shape)
+        last_coords = np.stack(last_coords, axis=0)
+        return last_coords
+
     def select_move(self):
-        last_frames = list(self.memory.frames)
-        if len(self.memory.frames) < 3:
-            return 0
-        last_frames = np.stack(last_frames, axis=0)
-        q_values = self.neural_model.model.predict(last_frames[np.newaxis, :, :, :])
-        self.total_memory.append(last_frames[np.newaxis, :, :, :])
+        input_coords = self.preprocess_coord_input()
+        q_values = self.neural_model.model.predict(input_coords[np.newaxis, :, :, :])
+        self.total_memory.append(input_coords[np.newaxis, :, :, :])
         return np.argmax(q_values[-1])
