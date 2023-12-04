@@ -17,7 +17,7 @@ class Agent:
         self.total_memory = []
 
     def create_dqn_agent(self):
-        epsilon_policy = EpsGreedyQPolicy(epsilon=0.1)
+        epsilon_policy = EpsGreedyQPolicy(eps=0.1)
         agent = DQNAgent(
             model=self.neural_model.model,
             memory=self.memory,
@@ -26,8 +26,10 @@ class Agent:
             nb_steps_warmup=100,
             target_model_update=1000
         )
-        agent.compile(Adam(lr=0.0001), metrics=["mae"])
+        agent.compile(Adam(lr=0.01), metrics=["mae"])
         return agent
+
+
 
     def model_summary(self):
         print(self.neural_model.model.summary())
@@ -40,7 +42,9 @@ class Agent:
         return last_coords
 
     def select_move(self):
-        input_coords = self.preprocess_coord_input()
-        q_values = self.neural_model.model.predict(input_coords[np.newaxis, :, :, :])
-        self.total_memory.append(input_coords[np.newaxis, :, :, :])
+        input_coords = np.array(list(self.memory.frames))
+        print(input_coords)
+        print(input_coords.shape)
+        q_values = self.neural_model.model.predict(input_coords)
+        self.total_memory.append(input_coords)
         return np.argmax(q_values[-1])
