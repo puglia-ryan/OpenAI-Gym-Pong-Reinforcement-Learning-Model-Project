@@ -2,6 +2,7 @@
 import numpy as np
 from rl.agents import DQNAgent
 from rl.policy import EpsGreedyQPolicy, LinearAnnealedPolicy
+from rl.callbacks import ModelIntervalCheckpoint
 from keras.optimizers import Adam
 import memory
 from model import CustomModel
@@ -15,6 +16,8 @@ class Agent:
         self.neural_model = CustomModel(input_shape, actions)
         self.dqAgent = self.create_dqn_agent()
         self.total_memory = []
+        self.checkpoint_filename = "DQN_CHECKPOINT.hf5"
+        self.checkpoint_callback = ModelIntervalCheckpoint(self.checkpoint_filename, interval=5000)
 
     def create_dqn_agent(self):
         epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy, attr='eps', value_max=1.0, value_min=0.1, value_test=0.05, nb_steps=5000000)
