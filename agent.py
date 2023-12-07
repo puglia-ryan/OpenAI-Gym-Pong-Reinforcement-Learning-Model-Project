@@ -1,7 +1,7 @@
 #This file is responsible for creating the agent which interracts with the game environment
 import numpy as np
 from rl.agents import DQNAgent
-import custom_eps_greedy
+from rl.policy import EpsGreedyQPolicy, LinearAnnealedPolicy
 from keras.optimizers import Adam
 import memory
 from model import CustomModel
@@ -17,7 +17,7 @@ class Agent:
         self.total_memory = []
 
     def create_dqn_agent(self):
-        epsilon_policy = custom_eps_greedy.CustomEpsGreedyPolicy(epsilon=0.1)
+        epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy, attr='eps', value_max=1.0, value_min=0.1, value_test=0.05, nb_steps=5000000)
         agent = DQNAgent(
             model=self.neural_model.model,
             memory=self.memory,

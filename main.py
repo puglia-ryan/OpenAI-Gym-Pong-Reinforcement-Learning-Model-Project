@@ -18,7 +18,7 @@ valid_actions = 2
 game_agent = agent.Agent((4,), valid_actions)
 
 for i in range(total_steps):
-    if i < 30:
+    if i < 50:
         action = random.randint(0, 1)
     else:
         action = game_agent.select_move()
