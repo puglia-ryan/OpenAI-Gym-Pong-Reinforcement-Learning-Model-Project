@@ -4,7 +4,7 @@ from rl.agents import DQNAgent
 from rl.policy import EpsGreedyQPolicy, LinearAnnealedPolicy
 from rl.callbacks import ModelIntervalCheckpoint
 from keras.optimizers import Adam
-import memory
+from memory import Memory
 from model import CustomModel
 
 
@@ -12,18 +12,17 @@ class Agent:
     def __init__(self, input_shape, actions, memory_len=5):
         self.input_shape = input_shape
         self.actions = actions
-        self.memory = memory.Memory.mem
+        self.memory = Memory(12)
         self.neural_model = CustomModel(input_shape, actions)
         self.dqAgent = self.create_dqn_agent()
         self.total_memory = []
         self.checkpoint_filename = "DQN_CHECKPOINT.hf5"
-        self.checkpoint_callback = ModelIntervalCheckpoint(self.checkpoint_filename, interval=5000)
-
+        self.checkpoint_callback = ModelIntervalCheckpoint(self.checkpoint_filename, interval=1000)
     def create_dqn_agent(self):
-        epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy, attr='eps', value_max=1.0, value_min=0.1, value_test=0.05, nb_steps=5000000)
+        epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1.0, value_min=0.1, value_test=0.05, nb_steps=5000000)
         agent = DQNAgent(
             model=self.neural_model.model,
-            memory=self.memory,
+            memory=self.memory.mem,
             policy=epsilon_policy,
             nb_actions=self.actions,
             nb_steps_warmup=50000,
@@ -40,17 +39,14 @@ class Agent:
     def model_summary(self):
         print(self.neural_model.model.summary())
 
+    def load_weights(self):
+        self.neural_model.model.load_weights(self.checkpoint_filename)
+        self.dqAgent.load_weights(self.checkpoint_filename)
 
     def select_move(self):
-        def select_move(self):
-            # Get the input coordinates from the agent's memory
-            input_coords = np.array(list(self.memory.frames))
+        pass
 
-            # Use epsilon-greedy policy to decide whether to explore or exploit
-            if np.random.rand() < self.dqAgent.policy.epsilon:
-                # Explore: Randomly choose an action
-                return np.random.randint(self.actions)
-            else:
-                # Exploit: Choose the action with the highest Q-value
-                q_values = self.neural_model.model.predict(input_coords)
-                return np.argmax(q_values[-1])
+
+            # Exploit: Choose the action with the highest Q-value
+            #q_values = self.neural_model.model.predict(input_coords)
+            #return np.argmax(q_values[-1])

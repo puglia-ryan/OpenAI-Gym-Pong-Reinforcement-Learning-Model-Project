@@ -17,6 +17,11 @@ pg.reset()
 valid_actions = 2
 game_agent = agent.Agent((4,), valid_actions)
 
+game_agent.load_weights()
+
+
+
+"""
 for i in range(total_steps):
     if i < 50:
         action = random.randint(0, 1)
@@ -39,7 +44,7 @@ for i in range(total_steps):
             prev_ball = ball
 
     all_inputs = [p1, p2, ball[0], ball[1]]
-    game_agent.memory.add_entry(all_inputs, reward, action, done)
+    #game_agent.memory.add_entry(all_inputs, reward, action, done)
     if step % target_update_frequency == 0:
         game_agent.dqAgent.save_weights("your_weights.h5", overwrite=True)
         game_agent.dqAgent.update_target_model_hard()
@@ -47,3 +52,4 @@ for i in range(total_steps):
     if done:
         pg.reset()
     step += 1
+"""
