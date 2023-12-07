@@ -11,7 +11,7 @@ class Agent:
     def __init__(self, input_shape, actions, memory_len=5):
         self.input_shape = input_shape
         self.actions = actions
-        self.memory = memory.Memory(memory_len)
+        self.memory = memory.Memory.mem
         self.neural_model = CustomModel(input_shape, actions)
         self.dqAgent = self.create_dqn_agent()
         self.total_memory = []
@@ -23,8 +23,11 @@ class Agent:
             memory=self.memory,
             policy=epsilon_policy,
             nb_actions=self.actions,
-            nb_steps_warmup=100,
-            target_model_update=1000
+            nb_steps_warmup=50000,
+            gamma=.99,
+            target_model_update=1000,
+            train_interval=12,
+            delta_clip=1
         )
         agent.compile(Adam(lr=0.001), metrics=["mae"])
         return agent
@@ -34,12 +37,6 @@ class Agent:
     def model_summary(self):
         print(self.neural_model.model.summary())
 
-    def preprocess_coord_input(self):
-        last_coords = list(self.memory.frames)
-        if len(last_coords) < 5:
-            return np.zeros(self.input_shape)
-        last_coords = np.stack(last_coords, axis=0)
-        return last_coords
 
     def select_move(self):
         def select_move(self):
