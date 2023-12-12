@@ -15,23 +15,26 @@ step = 0
 pg = game_env.pong_game()
 pg.reset()
 valid_actions = 2
-game_agent = agent.Agent((4,), valid_actions)
-
-game_agent.load_weights()
+game_agent = agent.Agent((84, 84), valid_actions)
 
 
+while True:
+    """
+    training_func = game_agent.dqAgent.fit(pg, nb_steps=1000000, callbacks=[game_agent.checkpoint_callback], log_interval=10000, visualize=False)
+    game_agent.dqAgent.test(game_env, nb_episodes=1, visualize=True)
+    pg.close()
+    game_agent.model_summary()
+    """
 
-"""
-for i in range(total_steps):
-    if i < 50:
-        action = random.randint(0, 1)
-    else:
-        action = game_agent.select_move()
+
+    action = game_agent.select_move()
+    print(action)
     frame, reward, done, info = pg.takeAction(action)
     processed_frame = ppf.resize_frame(frame)
     cv2.imshow("Pong Game", processed_frame)
     cv2.waitKey(10)
 
+    """
     p1, p2, ball = ppf.get_coords(processed_frame)
     if ball is not None:
         prev_ball = ball
@@ -44,6 +47,8 @@ for i in range(total_steps):
             prev_ball = ball
 
     all_inputs = [p1, p2, ball[0], ball[1]]
+    """
+
     #game_agent.memory.add_entry(all_inputs, reward, action, done)
     if step % target_update_frequency == 0:
         game_agent.dqAgent.save_weights("your_weights.h5", overwrite=True)
@@ -52,4 +57,3 @@ for i in range(total_steps):
     if done:
         pg.reset()
     step += 1
-"""

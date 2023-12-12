@@ -6,17 +6,19 @@ from rl.callbacks import ModelIntervalCheckpoint
 from keras.optimizers import Adam
 from memory import Memory
 from model import CustomModel
+from preprocess_frame import resize_frame
 
 
 class Agent:
     def __init__(self, input_shape, actions, memory_len=5):
-        self.input_shape = input_shape
         self.actions = actions
         self.memory = Memory(12)
-        self.neural_model = CustomModel(input_shape, actions)
+        self.input_shape = input_shape
+        self.neural_model = CustomModel((self.memory.win_len, self.input_shape), self.actions)
+        self.processor = preprocess_frame()
         self.dqAgent = self.create_dqn_agent()
         self.total_memory = []
-        self.checkpoint_filename = "DQN_CHECKPOINT.hf5"
+        self.checkpoint_filename = "DQN_CHECKPOINT.h5f"
         self.checkpoint_callback = ModelIntervalCheckpoint(self.checkpoint_filename, interval=1000)
     def create_dqn_agent(self):
         epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=1.0, value_min=0.1, value_test=0.05, nb_steps=5000000)
@@ -24,6 +26,7 @@ class Agent:
             model=self.neural_model.model,
             memory=self.memory.mem,
             policy=epsilon_policy,
+            processor= self.processor,
             nb_actions=self.actions,
             nb_steps_warmup=50000,
             gamma=.99,
@@ -40,8 +43,10 @@ class Agent:
         print(self.neural_model.model.summary())
 
     def load_weights(self):
-        self.neural_model.model.load_weights(self.checkpoint_filename)
-        self.dqAgent.load_weights(self.checkpoint_filename)
+        try:
+            self.dqAgent.load_weights(self.checkpoint_filename)
+        except:
+            print("No checkpoint file found")
 
     def select_move(self):
         pass

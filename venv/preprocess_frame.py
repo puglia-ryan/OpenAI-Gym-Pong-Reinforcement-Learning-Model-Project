@@ -1,19 +1,27 @@
 import cv2
 import numpy as np
+from rl.core import Processor
 
+class Frame_Processor(Processor):
+    def process_observation(self, observation):
+        shape = (84, 84)
+        frame = frame.astype(np.uint8)
+        frame = frame[34:34 + 160, :160]
 
-def resize_frame(frame, shape=(84, 84)):
-    frame = frame.astype(np.uint8)
-    frame = frame[34:34 + 160, :160]
+        # If the frame has multiple color channels (e.g., RGB), convert to grayscales
+        if len(frame.shape) == 3:
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        #We then use a threshhold (144) to convert the image to an array of 0s and 255s
+        frame[frame < 144] = 0
+        frame[frame >= 144] = 255
+        frame = cv2.resize(frame, shape, interpolation=cv2.INTER_NEAREST)
+        return frame
 
-    # If the frame has multiple color channels (e.g., RGB), convert to grayscales
-    if len(frame.shape) == 3:
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-    #We then use a threshhold (144) to convert the image to strictly black and white
-    frame[frame < 144] = 0
-    frame[frame >= 144] = 255
-    frame = cv2.resize(frame, shape, interpolation=cv2.INTER_NEAREST)
-    return frame
+    def process_state_batch(self, batch):
+        return batch / 255.0
+
+    def process_reward(self, reward):
+        return np.clip(reward, -1.0, 1.0)
 
 def get_coords(frame):
     paddle1 = []
