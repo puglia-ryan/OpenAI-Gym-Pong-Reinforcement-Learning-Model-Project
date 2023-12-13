@@ -10,7 +10,7 @@ class pong_game(object):
     def __init__(self):
         self.environment = gym.make("ALE/Pong-v5")
         self.environment.seed(0)
-        cv2.namedWindow("Pong Game", cv2.WINDOW_NORMAL)
+        #cv2.namedWindow("Pong Game", cv2.WINDOW_NORMAL)
     def reset(self):
         self.frame = self.environment.reset()
 

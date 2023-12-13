@@ -6,7 +6,7 @@ from rl.callbacks import ModelIntervalCheckpoint
 from keras.optimizers import Adam
 from memory import Memory
 from model import CustomModel
-from preprocess_frame import resize_frame
+from preprocess_frame import Frame_Processor
 
 
 class Agent:
@@ -14,8 +14,8 @@ class Agent:
         self.actions = actions
         self.memory = Memory(12)
         self.input_shape = input_shape
-        self.neural_model = CustomModel((self.memory.win_len, self.input_shape), self.actions)
-        self.processor = preprocess_frame()
+        self.neural_model = CustomModel((self.memory.win_len, self.input_shape[0], self.input_shape[1]), self.actions)
+        self.processor = Frame_Processor()
         self.dqAgent = self.create_dqn_agent()
         self.total_memory = []
         self.checkpoint_filename = "DQN_CHECKPOINT.h5f"
@@ -26,7 +26,7 @@ class Agent:
             model=self.neural_model.model,
             memory=self.memory.mem,
             policy=epsilon_policy,
-            processor= self.processor,
+            processor=self.processor,
             nb_actions=self.actions,
             nb_steps_warmup=50000,
             gamma=.99,

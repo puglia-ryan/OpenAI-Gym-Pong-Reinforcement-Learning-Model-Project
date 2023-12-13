@@ -1,21 +1,29 @@
 import cv2
 import numpy as np
 from rl.core import Processor
+from PIL import Image
 
 class Frame_Processor(Processor):
     def process_observation(self, observation):
         shape = (84, 84)
-        frame = frame.astype(np.uint8)
-        frame = frame[34:34 + 160, :160]
+
+        observation = observation.astype(np.uint8)
+        observation = observation[34:34 + 160, :160]
 
         # If the frame has multiple color channels (e.g., RGB), convert to grayscales
-        if len(frame.shape) == 3:
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
-        #We then use a threshhold (144) to convert the image to an array of 0s and 255s
-        frame[frame < 144] = 0
-        frame[frame >= 144] = 255
-        frame = cv2.resize(frame, shape, interpolation=cv2.INTER_NEAREST)
-        return frame
+        if len(observation.shape) == 3:
+            observation = cv2.cvtColor(observation, cv2.COLOR_RGB2GRAY)
+        # We then use a threshhold (144) to convert the image to an array of 0s and 255s
+        observation[observation < 144] = 0
+        observation[observation >= 144] = 255
+        observation = cv2.resize(observation, shape, interpolation=cv2.INTER_NEAREST)
+        """
+        frame = Image.fromarray(observation)
+        frame = frame.resize(shape)
+        frame = frame.convert("L")
+        frame = np.array("unit8")
+        """
+        return observation
 
     def process_state_batch(self, batch):
         return batch / 255.0
@@ -42,5 +50,24 @@ def get_coords(frame):
     return sum(paddle1)/len(paddle1), sum(paddle2)/len(paddle2), ball
 
 
+def process_observation(observation):
+    shape = (84, 84)
 
+    observation = observation.astype(np.uint8)
+    observation = observation[34:34 + 160, :160]
+
+    # If the frame has multiple color channels (e.g., RGB), convert to grayscales
+    if len(observation.shape) == 3:
+        observation = cv2.cvtColor(observation, cv2.COLOR_RGB2GRAY)
+    #We then use a threshhold (144) to convert the image to an array of 0s and 255s
+    observation[observation < 144] = 0
+    observation[observation >= 144] = 255
+    observation = cv2.resize(observation, shape, interpolation=cv2.INTER_NEAREST)
+    """
+    frame = Image.fromarray(observation)
+    frame = frame.resize(shape)
+    frame = frame.convert("L")
+    frame = np.array(frame, dtype=np.uint8)
+    """
+    return observation
 
