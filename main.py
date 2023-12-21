@@ -14,6 +14,9 @@ step = 0
 
 
 def train_model():
+    """
+    The purpose of this function is to let an agent train in an environment and readjust its weights
+    """
     valid_actions = env.action_space.n
     img_shape = (84, 84)
     window_length = 12
@@ -29,6 +32,10 @@ def train_model():
 
 
 def test_model():
+    """
+    This function is here to collect data on the performance of the agent. The performance of the agent is then compared
+    to either a different agent or random actions
+    """
     env = gym.make("ALE/Pong-v5", render_mode="human")
     env.reset()
     ep_num = 200
@@ -83,6 +90,18 @@ def test_model():
     print(f"Random Action Rewards: {rand_total_reward}\nRandom Action Average: {np.mean(rand_total_reward)}")
     plt.show()
 
+def show_agent_playing:
+    """
+    This function is simply to display the agent interacting with the environment and playing to the best of its ability
+    """
+    env = gym.make("ALE/Pong-v5", render_mode="human")
+    env.reset()
+    valid_actions = env.action_space.n
+    img_shape = (84, 84)
+    window_length = 12
+    input_shape = (window_length, img_shape[0], img_shape[1])
+    game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length, "checkpoint_file.h5f")
+    game_agent.dqAgent.test(env, nb_episodes=5, visualize=False, callbacks=[test_callback])
 
 
 def custom_test():
