@@ -17,6 +17,8 @@ def train_model():
     """
     The purpose of this function is to let an agent train in an environment and readjust its weights
     """
+    env = gym.make("ALE/Pong-v5")
+    env.reset()
     valid_actions = env.action_space.n
     img_shape = (84, 84)
     window_length = 12
@@ -36,7 +38,7 @@ def test_model():
     This function is here to collect data on the performance of the agent. The performance of the agent is then compared
     to either a different agent or random actions
     """
-    env = gym.make("ALE/Pong-v5", render_mode="human")
+    env = gym.make("ALE/Pong-v5")
     env.reset()
     ep_num = 200
 
@@ -90,7 +92,7 @@ def test_model():
     print(f"Random Action Rewards: {rand_total_reward}\nRandom Action Average: {np.mean(rand_total_reward)}")
     plt.show()
 
-def show_agent_playing:
+def show_agent_playing():
     """
     This function is simply to display the agent interacting with the environment and playing to the best of its ability
     """
@@ -126,12 +128,20 @@ def custom_test():
 
 
 while True:
-    user_input = input("Type 1 to train the model\nType 2 to test the model\nType 3 to end the program")
+    user_input = input("Type 1 to train the model\n"
+                       "Type 2 to test the model\n"
+                       "Type 3 to display the agent playing\n"
+                       "Type 4 to end the program")
     if user_input == "1":
         train_model()
         break
     elif user_input == "2":
         test_model()
+        break
+    elif user_input == "3":
+        show_agent_playing()
+    elif user_input == "4":
+        print("Goodbye")
         break
     else:
         print("Not a valid input")
