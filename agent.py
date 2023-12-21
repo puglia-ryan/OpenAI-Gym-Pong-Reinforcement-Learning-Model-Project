@@ -12,8 +12,8 @@ from preprocess_frame import Frame_Processor
 
 
 class Agent:
-    def __init__(self, input_shape, actions, mem_lim_len, window_len):
-        self.checkpoint_filename = "checkpoint_file.h5f"
+    def __init__(self, input_shape, actions, mem_lim_len, window_len, checkpoint_filename):
+        self.checkpoint_filename = checkpoint_filename
         self.checkpoint_callback = ModelIntervalCheckpoint(self.checkpoint_filename, interval=1000)
         self.actions = actions
         self.mem_lim_len = mem_lim_len

@@ -18,7 +18,7 @@ def train_model():
     img_shape = (84, 84)
     window_length = 12
     input_shape = (window_length, img_shape[0], img_shape[1])
-    game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length)
+    game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length, "checkpoint_file.h5f")
     env = gym.make("ALE/Pong-v5")
     env.reset()
 
@@ -29,7 +29,7 @@ def train_model():
 
 
 def test_model():
-    env = gym.make("ALE/Pong-v5")
+    env = gym.make("ALE/Pong-v5", render_mode="human")
     env.reset()
     ep_num = 200
 
@@ -46,7 +46,7 @@ def test_model():
     img_shape = (84, 84)
     window_length = 12
     input_shape = (window_length, img_shape[0], img_shape[1])
-    game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length)
+    game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length, "checkpoint_file.h5f")
     game_agent.dqAgent.test(env, nb_episodes=ep_num, visualize=False, callbacks=[test_callback])
     adjusted_rewards = [element + 21 for element in test_callback.episode_rewards]
     env.reset()
