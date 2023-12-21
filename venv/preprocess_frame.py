@@ -17,20 +17,17 @@ class Frame_Processor(Processor):
         observation[observation < 144] = 0
         observation[observation >= 144] = 255
         observation = cv2.resize(observation, shape, interpolation=cv2.INTER_NEAREST)
-        """
-        frame = Image.fromarray(observation)
-        frame = frame.resize(shape)
-        frame = frame.convert("L")
-        frame = np.array("unit8")
-        """
+
         return observation
 
     def process_state_batch(self, batch):
-        return batch / 255.0
+        return  batch.astype('float32') / 255
 
     def process_reward(self, reward):
         return np.clip(reward, -1.0, 1.0)
 
+
+#Function to get the coordinates of both paddles and the ball
 def get_coords(frame):
     paddle1 = []
     paddle2 = []

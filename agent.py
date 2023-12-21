@@ -28,14 +28,14 @@ class Agent:
         self.try_load_weights()
 
     def create_dqn_agent(self):
-        epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=0.9, value_min=0.1, value_test=0.05, nb_steps=5000000)
+        epsilon_policy = LinearAnnealedPolicy(EpsGreedyQPolicy(), attr='eps', value_max=0.6, value_min=0.1, value_test=0.05, nb_steps=5000000)
         agent = DQNAgent(
             model=self.neural_model,
             memory=self.memory.mem,
             policy=epsilon_policy,
             processor=self.processor,
             nb_actions=self.actions,
-            nb_steps_warmup=50000,
+            nb_steps_warmup=0,
             gamma=.99,
             target_model_update=1000,
             train_interval=12,
