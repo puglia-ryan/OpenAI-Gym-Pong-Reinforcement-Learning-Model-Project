@@ -27,23 +27,5 @@ class Frame_Processor(Processor):
         return np.clip(reward, -1.0, 1.0)
 
 
-#Function to get the coordinates of both paddles and the ball
-def get_coords(frame):
-    paddle1 = []
-    paddle2 = []
-    ball = None
-
-    for row_index in range(len(frame)):
-        for col_index in range(len(frame)):
-            if frame[row_index][col_index] == 255:
-                if col_index < 12:
-                    paddle1.append(row_index)
-                elif col_index > 73:
-                    paddle2.append(row_index)
-                else:
-                    ball = [row_index, col_index]
-    if len(paddle1) == 0 or len(paddle2) == 0:
-        return 42, 42, [42, 42]
-    return sum(paddle1)/len(paddle1), sum(paddle2)/len(paddle2), ball
 
 

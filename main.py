@@ -103,7 +103,7 @@ def show_agent_playing():
     window_length = 12
     input_shape = (window_length, img_shape[0], img_shape[1])
     game_agent = agent.Agent(input_shape, valid_actions, total_steps, window_length, "checkpoint_file.h5f")
-    game_agent.dqAgent.test(env, nb_episodes=5, visualize=False, callbacks=[test_callback])
+    game_agent.dqAgent.test(env, nb_episodes=5, visualize=False)
 
 
 def custom_test():
