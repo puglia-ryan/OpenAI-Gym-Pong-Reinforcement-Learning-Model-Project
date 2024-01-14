@@ -12,15 +12,6 @@ class CustomModel:
         self.model = self.build_model()
 
     def build_model(self):
-        """
-        model = keras.Sequential([
-            keras.layers.Input(shape=self.input_shape),
-            keras.layers.Flatten(),
-            keras.layers.Dense(128, input_dim=12*84*84, activation='relu'),
-            keras.layers.Dense(self.actions, activation='linear')
-        ])
-        model.compile(optimizer='adam', loss='mse')
-        """
 
         model = Sequential()
         #These layers will help the model recognise what is going on on the screen.

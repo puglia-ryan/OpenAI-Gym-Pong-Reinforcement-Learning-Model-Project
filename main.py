@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import preprocess_frame
 from rl.callbacks import Callback
 import random
+import visualkeras
 
 import agent
 
